@@ -50,7 +50,6 @@ let GrabComic (client:HttpClient, number:int) =
     | :? HttpRequestException as e -> WebResponse.Error <| e.Message
     | :? System.AggregateException as e -> WebResponse.Error <| e.Message
 
-
 let PrintComic comic outputFormat = 
     if outputFormat = "json" then
         let serialized = JsonConvert.SerializeObject (comic, Formatting.Indented)
@@ -59,7 +58,6 @@ let PrintComic comic outputFormat =
         printfn "Title: %s" comic.Title
         printfn "Alt: %s" comic.Alt
         printfn "Img: %s" comic.Img
-
 
 let SaveComic (client:HttpClient, comic) =
     printf "Saving comic...\n"
@@ -73,14 +71,12 @@ let SaveComic (client:HttpClient, comic) =
     | :? HttpRequestException as e -> HandleWebError ("Retriving comic: " + e.Message)
     | :? System.AggregateException as e -> HandleWebError ("Retriving comic: " + e.Message)
 
-
 let ValidateOutput outputFormat =
     if not (List.contains outputFormat ["text"; "json"]) then
         printfn "Unrecognized output format: %A" outputFormat
         false
     else
         true
-
 
 [<EntryPoint>]
 let main argv =
