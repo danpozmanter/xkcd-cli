@@ -43,9 +43,9 @@ def print_comic(comic, output_format):
     if output_format == 'json':
         print(json.dumps(comic, indent=2))
     else:
-        print(comic.title)
-        print(comic.alt)
-        print(comic.img)
+        print(comic['title'])
+        print(comic['alt'])
+        print(comic['img'])
 
 
 def save_comic(comic):
@@ -73,9 +73,8 @@ def validate_output(output_format):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Process some integers.')
     parser.add_argument(
-        '-n', type=int, metavar='number',
-        help='comic number to retrieve',
-        required=True
+        '-n', type=int, metavar='number', default=-1,
+        help='comic number to retrieve, latest by default'
     )
     parser.add_argument(
         '-o', default='text',

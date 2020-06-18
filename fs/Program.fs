@@ -6,7 +6,7 @@ open CommandLine
 // System.Text.Json would be preferable but is not yet feature complete.
 
 type Arguments = {
-    [<Option('n', Required = true, HelpText = "comic number to retrieve: -1 for latest")>] Number : int;
+    [<Option('n', Default=(-1), HelpText = "comic number to retrieve, latest by default")>] Number : int;
     [<Option('o', Default="text", HelpText = "output format: text or json")>] OutputFormat : string;
     [<Option('s', HelpText = "save comic locally")>] Save : bool;
 }

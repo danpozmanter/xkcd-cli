@@ -9,7 +9,7 @@ namespace cs
 {
     class Arguments
     {
-        [Option('n', "number", Required = true, HelpText = "comic number to retrieve")]
+        [Option('n', "number", Default=-1, HelpText = "comic number to retrieve, latest by default")]
         public int Number { get; set; }
         [Option('o', "outputFormat", Default="text", Required = false, HelpText = "output format: text or json")]
         public string OutputFormat { get; set; }

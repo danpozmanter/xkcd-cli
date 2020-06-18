@@ -96,9 +96,8 @@ def validate_output(output_format: str):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Process some integers.')
     parser.add_argument(
-        '-n', type=int, metavar='number',
-        help='comic number to retrieve',
-        required=True
+        '-n', type=int, metavar='number', default=-1,
+        help='comic number to retrieve, latest by default'
     )
     parser.add_argument(
         '-o', default='text',
