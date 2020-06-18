@@ -36,7 +36,7 @@ def handle_error(error: str):
     print('Error! {}'.format(error))
 
 
-def grab_comic(number: str) -> WebResponse:
+def get_comic_response(number: str) -> WebResponse:
     url = None
     if number == -1:
         print('Fetching latest comic')
@@ -51,7 +51,7 @@ def grab_comic(number: str) -> WebResponse:
     return r.text
 
 
-def print_comic(comic: ComicResponse, output_format: str):
+def print_comic_response(comic: ComicResponse, output_format: str):
     if output_format == 'json':
         print(comic.to_json())
     else:
@@ -104,10 +104,10 @@ if __name__ == '__main__':
     args = parser.parse_args()
     if not validate_output(args.o):
         sys.exit(1)
-    response = grab_comic(args.n)
+    response = get_comic_response(args.n)
     if type(response) == ComicResponse:
         comic = cast(ComicResponse, response)
-        print_comic(comic, args.o)
+        print_comic_response(comic, args.o)
         if args.s:
             save_comic(comic)
     else:

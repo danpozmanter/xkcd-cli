@@ -20,7 +20,7 @@ ComicResponse = {
 """
 
 
-def grab_comic(number):
+def get_comic_response(number):
     url = None
     if number == -1:
         print('Fetching latest comic')
@@ -36,7 +36,7 @@ def grab_comic(number):
     return None
 
 
-def print_comic(comic, output_format):
+def print_comic_response(comic, output_format):
     if not comic:
         # error!
         return
@@ -91,8 +91,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
     if not validate_output(args.o):
         sys.exit(1)
-    comic = grab_comic(args.n)
+    comic = get_comic_response(args.n)
     if comic:
-        print_comic(comic, args.o)
+        print_comic_response(comic, args.o)
         if args.s:
             save_comic(comic)

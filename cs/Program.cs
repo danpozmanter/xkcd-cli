@@ -34,7 +34,7 @@ namespace cs
     class Program
     {
 
-        static ComicResponse GrabComic(HttpClient client, int number) {
+        static ComicResponse GetComicResponse(HttpClient client, int number) {
             var url = "";
             if (number == -1) {
                 Console.WriteLine("Fetching latest comic");
@@ -57,7 +57,7 @@ namespace cs
             return null;
         }
 
-        static void PrintComic(ComicResponse comic, string outputFormat) {
+        static void PrintComicResponse(ComicResponse comic, string outputFormat) {
             if (outputFormat == "json") {
                 Console.WriteLine(JsonConvert.SerializeObject(comic, Formatting.Indented));
             }
@@ -102,9 +102,9 @@ namespace cs
                     Environment.Exit(1);
                 }
                 var client = new HttpClient();
-                var comic = GrabComic(client, a.Number);
+                var comic = GetComicResponse(client, a.Number);
                 if(comic != null) {
-                    PrintComic(comic, a.OutputFormat);
+                    PrintComicResponse(comic, a.OutputFormat);
                     if (a.Save) {
                         SaveComic(client, comic);
                     }

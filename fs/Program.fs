@@ -32,7 +32,7 @@ type WebResponse =
 let HandleError (error:string) =
     printfn "Error! %A" error
 
-let GrabComic (client:HttpClient, number:int) = 
+let GetComicResponse (client:HttpClient, number:int) = 
     let url = 
         match number with
         | -1 -> 
@@ -50,7 +50,7 @@ let GrabComic (client:HttpClient, number:int) =
     | :? HttpRequestException as e -> WebResponse.Error <| e.Message
     | :? System.AggregateException as e -> WebResponse.Error <| e.Message
 
-let PrintComic comic outputFormat = 
+let PrintComicResponse comic outputFormat = 
     if outputFormat = "json" then
         let serialized = JsonConvert.SerializeObject (comic, Formatting.Indented)
         printfn "%O" serialized
@@ -87,9 +87,9 @@ let main argv =
             if not (ValidateOutput args.Value.OutputFormat) then
                 Environment.Exit(1)
             let client = new HttpClient()
-            match GrabComic(client, args.Value.Number) with
+            match GetComicResponse(client, args.Value.Number) with
             | WebResponse.Success s ->
-                PrintComic s args.Value.OutputFormat
+                PrintComicResponse s args.Value.OutputFormat
                 if args.Value.Save then
                     SaveComic(client, s)
             | WebResponse.Error e -> HandleError e       
