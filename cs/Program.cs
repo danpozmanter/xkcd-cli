@@ -77,10 +77,13 @@ namespace cs
                 File.WriteAllBytes(filename, resp);
             }
             catch(HttpRequestException e) {
-                Console.WriteLine(String.Format("Error! {0}", e.Message));
+                Console.WriteLine(String.Format("Error! Retrieving comic: {0}", e.Message));
             }
             catch(System.AggregateException e) {
-                Console.WriteLine(String.Format("Error! {0}", e.Message));
+                Console.WriteLine(String.Format("Error! Retrieving comic:  {0}", e.Message));
+            }
+            catch(System.Exception e) {
+                Console.WriteLine(String.Format("Error! Saving comic: {0}", e.Message));
             }
         }
 

@@ -71,8 +71,11 @@ def save_comic(comic):
         print(r.text)
         sys.exit(1)
     image = r.content
-    with open(filename, 'wb') as f:
-        f.write(image)
+    try:
+        with open(filename, 'wb') as f:
+            f.write(image)
+    except Exception as e:
+        print(e)
 
 
 def validate_output(output_format: str):

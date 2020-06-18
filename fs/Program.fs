@@ -29,7 +29,7 @@ type WebResponse =
 | Success of ComicResponse
 | Error of string
 
-let HandleWebError (error:string) =
+let HandleError (error:string) =
     printfn "Error! %A" error
 
 let GrabComic (client:HttpClient, number:int) = 
@@ -68,8 +68,9 @@ let SaveComic (client:HttpClient, comic) =
         let resp = client.GetByteArrayAsync(comic.Img).Result
         File.WriteAllBytes(filename, resp)
     with
-    | :? HttpRequestException as e -> HandleWebError ("Retriving comic: " + e.Message)
-    | :? System.AggregateException as e -> HandleWebError ("Retriving comic: " + e.Message)
+    | :? HttpRequestException as e -> HandleError ("Retrieving comic: " + e.Message)
+    | :? System.AggregateException as e -> HandleError ("Retrieving comic: " + e.Message)
+    | e -> HandleError ("Saving comic: " + e.Message)
 
 let ValidateOutput outputFormat =
     if not (List.contains outputFormat ["text"; "json"]) then
@@ -91,6 +92,6 @@ let main argv =
                 PrintComic s args.Value.OutputFormat
                 if args.Value.Save then
                     SaveComic(client, s)
-            | WebResponse.Error e -> HandleWebError e       
+            | WebResponse.Error e -> HandleError e       
         | _ -> ()
     0

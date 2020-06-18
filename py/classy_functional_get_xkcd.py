@@ -82,8 +82,11 @@ def save_comic(comic: ComicResponse):
         print(r.text)
         sys.exit(1)
     image = r.content
-    with open(filename, 'wb') as f:
-        f.write(image)
+    try:
+        with open(filename, 'wb') as f:
+            f.write(image)
+    except Exception as e:
+        print(e)
 
 
 def validate_output(output_format: str):
@@ -105,8 +108,7 @@ if __name__ == '__main__':
         help='output format: text or json'
     )
     parser.add_argument(
-        '-s',
-        action='store_true',
+        '-s', action='store_true',
         help='save comic to local filesystem'
     )
     args = parser.parse_args()
