@@ -1,9 +1,8 @@
 ﻿open System
 open System.IO
 open System.Net.Http
-open Newtonsoft.Json
+open System.Text.Json
 open CommandLine
-// System.Text.Json would be preferable but is not yet feature complete.
 
 type Arguments = {
     [<Option('n', Default=(-1), HelpText = "comic number to retrieve, latest by default")>] Number : int;
@@ -11,6 +10,7 @@ type Arguments = {
     [<Option('s', HelpText = "save comic locally")>] Save : bool;
 }
 
+[<CLIMutable>]
 type ComicResponse = {
     Month:string
     Num: int
@@ -44,7 +44,9 @@ let GetComicResponse (client:HttpClient, number:int) =
         
     try
         let resp = client.GetStringAsync(url).Result
-        let data = JsonConvert.DeserializeObject<ComicResponse> resp
+        let opts = JsonSerializerOptions()
+        opts.PropertyNameCaseInsensitive <- true
+        let data = JsonSerializer.Deserialize<ComicResponse> (resp, opts)
         data |> WebResponse.Success
     with
     | :? HttpRequestException as e -> WebResponse.Error <| e.Message
@@ -52,7 +54,9 @@ let GetComicResponse (client:HttpClient, number:int) =
 
 let PrintComicResponse comic outputFormat = 
     if outputFormat = "json" then
-        let serialized = JsonConvert.SerializeObject (comic, Formatting.Indented)
+        let opts = JsonSerializerOptions()
+        opts.WriteIndented <- true
+        let serialized = JsonSerializer.Serialize (comic, opts)
         printfn "%O" serialized
     else
         printfn "Title: %s" comic.Title
