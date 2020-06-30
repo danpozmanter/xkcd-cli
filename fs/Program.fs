@@ -77,11 +77,7 @@ let SaveComic (client:HttpClient, comic) =
     | e -> HandleError ("Saving comic: " + e.Message)
 
 let ValidateOutput outputFormat =
-    if not (List.contains outputFormat ["text"; "json"]) then
-        printfn "Unrecognized output format: %A" outputFormat
-        false
-    else
-        true
+    List.contains outputFormat ["text"; "json"]
 
 [<EntryPoint>]
 let main argv =
@@ -89,6 +85,7 @@ let main argv =
     match result with
         | :? Parsed<Arguments> as args ->
             if not (ValidateOutput args.Value.OutputFormat) then
+                printfn "Unrecognized output format: %A" args.Value.OutputFormat
                 Environment.Exit(1)
             let client = new HttpClient()
             match GetComicResponse(client, args.Value.Number) with

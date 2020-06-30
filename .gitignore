@@ -3,3 +3,6 @@ bin/
 obj/
 .ionide/
 .vscode/
+.idea/
+out/
+target/
