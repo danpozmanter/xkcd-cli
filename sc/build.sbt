@@ -5,7 +5,7 @@ version := "0.0.1"
 scalaVersion := "2.13.3"
 
 ThisBuild / scalaVersion := "2.13.3"
-ThisBuild / organization := "todolist"
+ThisBuild / organization := "getxkcd"
 
 resolvers += JavaNet2Repository
 
