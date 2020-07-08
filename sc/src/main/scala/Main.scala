@@ -1,4 +1,4 @@
-package todolist
+package getxkcd
 
 import java.io.{BufferedOutputStream, FileOutputStream, IOException}
 import com.google.gson.{GsonBuilder, FieldNamingPolicy}

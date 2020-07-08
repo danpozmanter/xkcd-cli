@@ -13,4 +13,4 @@ libraryDependencies += "com.lihaoyi" %% "requests" % "0.5.1"
 libraryDependencies += "com.google.code.gson" % "gson" % "2.8.1"
 libraryDependencies += "org.rogach" %% "scallop" % "3.5.0"
 
-mainClass in (Compile, run) := Some("todolist.Main")
+mainClass in (Compile, run) := Some("getxkcd.Main")
