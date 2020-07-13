@@ -1,0 +1,41 @@
+buildscript {
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.72"
+    }
+}
+
+plugins {
+    id "org.jetbrains.kotlin.jvm" version "1.3.72"
+}
+
+
+group = ''
+version = '0.0.1'
+sourceCompatibility = '1.8'
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+
+jar {
+    manifest {
+        attributes "Main-Class": "MainKt"
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib', version:'1.3.72'
+    compile group: 'com.github.kittinunf.fuel', name: 'fuel', version:'2.2.3'
+    compile group: 'com.github.kittinunf.fuel', name: 'fuel-gson', version:'2.2.3'
+    compile group: 'com.google.code.gson', name: 'gson', version:'2.8.6'
+    compile group: 'com.github.ajalt', name:'clikt', version:'2.7.1'
+}

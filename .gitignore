@@ -6,3 +6,6 @@ obj/
 .idea/
 out/
 target/
+.gradle/
+build/
+*.jar

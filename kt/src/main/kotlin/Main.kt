@@ -2,25 +2,25 @@ import java.io.File
 import java.io.IOException
 import kotlin.system.*
 import com.github.kittinunf.fuel.httpGet
-import com.github.kittinunf.fuel.json.responseJson
 import com.github.kittinunf.result.Result
 import com.github.ajalt.clikt.core.*
 import com.github.ajalt.clikt.parameters.options.*
 import com.github.ajalt.clikt.parameters.types.*
+import com.github.kittinunf.fuel.gson.responseObject
 import com.google.gson.*
 
 data class ComicResponse(
-    val month: String,
-    val num: Int,
-    val link: String,
-    val year: String,
-    val news: String,
-    val safeTitle: String,
-    val transcript: String,
-    val alt: String,
-    val img: String,
-    val title: String,
-    val day: String
+        val month: String,
+        val num: Int,
+        val link: String,
+        val year: String,
+        val news: String,
+        val safeTitle: String,
+        val transcript: String,
+        val alt: String,
+        val img: String,
+        val title: String,
+        val day: String
 )
 
 fun getComicResponse(number: Int): ComicResponse? {
@@ -28,16 +28,15 @@ fun getComicResponse(number: Int): ComicResponse? {
         -1 -> "http://xkcd.com/info.0.json"
         else -> "http://xkcd.com/%d/info.0.json".format(number)
     }
-    val (req, resp, result) = url.httpGet().responseJson()
+    val gson = GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create()
+    val (_, _, result) = url.httpGet().responseObject<ComicResponse>(gson)
     return when (result) {
         is Result.Failure -> {
-            println(result.getException())
+            println(result.getException().message)
             null
         }
         is Result.Success -> {
-            val gson = GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create()
-            val cr = gson.fromJson(result.get().content, ComicResponse::class.java)
-            cr
+            result.get()
         }
     }
 }
@@ -54,10 +53,10 @@ fun printComicResponse(comic: ComicResponse, outputFormat: String) {
 }
 
 fun saveComic(comic: ComicResponse) {
-    val (req, resp, result) = comic.img.httpGet().response()
+    val (_, _, result) = comic.img.httpGet().response()
     when (result) {
         is Result.Failure -> {
-            println(result.getException())
+            println(result.getException().message)
             return
         }
         is Result.Success -> {
