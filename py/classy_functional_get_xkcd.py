@@ -73,9 +73,9 @@ def print_comic_response(comic: ComicResponse, output_format: str):
 
 def save_comic(comic: ComicResponse):
     print('Saving comic...')
-    imgage_url = comic.get('img')
-    filename = 'xkcd_{}'.format(imgage_url.split('/')[-1])
-    r = requests.get(imgage_url)
+    image_url = comic.get('img')
+    filename = 'xkcd_{}'.format(image_url.split('/')[-1])
+    r = requests.get(image_url)
     if not r.ok:
         print('Error retrieving comic')
         print(r.status_code)
