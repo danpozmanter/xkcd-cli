@@ -3,24 +3,51 @@ import json
 import sys
 import requests
 
-""" response data:
-ComicResponse = {
-    month:string
+
+class ComicResponse:
+    month: str
     num: int
-    link: string
-    year: string
-    news: string
-    safe_title: string
-    transcript: string
-    alt: string
-    img: string
-    title: string
-    day: string
-}
-"""
+    link: str
+    year: str
+    news: str
+    safe_title: str
+    transcript: str
+    alt: str
+    img: str
+    title: str
+    day: str
+
+    @classmethod
+    def from_dict(cls, data: dict):
+        instance = cls()
+        for key in data:
+            setattr(instance, key, data[key])
+        return instance
+    
+    def to_json(self):
+        return json.dumps(self.__dict__, indent=2)
 
 
-def get_comic_response(number):
+class WebResponse:
+    comic: ComicResponse = None
+    error: str = None
+
+    def __init__(self, comic=None, error=None):
+        if comic:
+            self.comic = comic
+            self.error = None
+        elif error:
+            self.comic = None
+            self.error = error
+        else:
+            raise Exception('Must specify comic or error')
+
+
+def handle_error(error: str):
+    print('Error! {}'.format(error))
+
+
+def get_comic_response(number: str) -> WebResponse:
     url = None
     if number == -1:
         print('Fetching latest comic')
@@ -31,24 +58,20 @@ def get_comic_response(number):
     r = requests.get(url)
     if r.ok:
         data = r.json()
-        return data
-    print('Error! {}'.format(r.text))
-    return None
+        return WebResponse(comic=ComicResponse.from_dict(data))
+    return WebResponse(error=r.text)
 
 
-def print_comic_response(comic, output_format):
-    if not comic:
-        # error!
-        return
+def print_comic_response(comic: ComicResponse, output_format: str):
     if output_format == 'json':
-        print(json.dumps(comic, indent=2))
+        print(comic.to_json())
     else:
-        print(comic['title'])
-        print(comic['alt'])
-        print(comic['img'])
+        print(comic.title)
+        print(comic.alt)
+        print(comic.img)
 
 
-def save_comic(comic):
+def save_comic(comic: ComicResponse):
     print('Saving comic...')
     image_url = comic.get('img')
     filename = 'xkcd_{}'.format(image_url.split('/')[-1])
@@ -66,7 +89,7 @@ def save_comic(comic):
         print(e)
 
 
-def validate_output(output_format):
+def validate_output(output_format: str):
     if output_format not in ('text', 'json'):
         print('Unrecognized output format: {}'.format(output_format))
         return False
@@ -91,8 +114,10 @@ if __name__ == '__main__':
     args = parser.parse_args()
     if not validate_output(args.o):
         sys.exit(1)
-    comic = get_comic_response(args.n)
-    if comic:
-        print_comic_response(comic, args.o)
+    response = get_comic_response(args.n)
+    if response.comic:
+        print_comic_response(response.comic, args.o)
         if args.s:
-            save_comic(comic)
+            save_comic(response.comic)
+    else:
+        handle_error(response.error)
