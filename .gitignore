@@ -3,6 +3,7 @@ bin/
 obj/
 .ionide/
 .vscode/
+.calva/
 .idea/
 out/
 target/
