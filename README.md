@@ -19,4 +19,6 @@ I used the CommandLine package for both C# and F# to make comparison a bit easie
 
 TODO: Actually add in comments and spruce this all up.
 
+This app is not for consumption or anything serious - more to get a feel for different languages.
+
 PS Try getting comic 404!
