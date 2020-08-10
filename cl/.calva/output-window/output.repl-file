@@ -1,0 +1,27 @@
+; This is the Calva evaluation results output window.
+; Leave it open, please. Because quirks.
+; TIPS: The keyboard shortcut `ctrl+alt+c o` shows and focuses this window.
+; Please see https://calva.io/output/ for more info.
+; Happy coding! ♥️
+
+; Jacking in...
+; Hooking up nREPL sessions...
+; Connected session: clj
+; TIPS: You can edit the contents here. Use it as a REPL if you like.
+;   Use `alt+enter` to evaluate the current top level form.
+;   (`ctrl+enter` evaluates the current form.)
+;   File URLs in stacktrace frames are peekable and clickable.
+; Debugger initialized
+clj::getxkcd.core=> 
+; Jack-in done.
+#'getxkcd.core/get-comic-response
+clj::getxkcd.core=> (get-comic-response 401)
+"{\"month\": \"3\", \"num\": 401, \"link\": \"\", \"year\": \"2008\", \"news\": \"\", \"safe_title\": \"Large Hadron Collider\", \"transcript\": \"The Large Hadron Collider, CERN...\\nWoman: Okay, moment of truth. <<click>>\\n<<VVVVVRRMMMMM>>\\nMan: Do you see the Higgs Boson?\\nWoman: Nope.\\nMan: Huh.\\nWoman: Well, then.\\nMan: Until the theorists get back to us, wanna try hitting pigeons with the proton stream?\\nWoman: Already on it. Cool! I just gave a helicopter cancer.\\n{{Alt text: When charged particles of more than 5 TeV pass through a bubble chamber, they leave a trail of candy.}}\", \"alt\": \"When charged particles of more than 5 TeV pass through a bubble chamber, they leave a trail of candy.\", \"img\": \"https://imgs.xkcd.com/comics/large_hadron_collider.png\", \"title\": \"Large Hadron Collider\", \"day\": \"26\"}"
+clj::getxkcd.core=> (get-comic-response 404)
+Web Error: clj-http: status 404
+nil
+clj::getxkcd.core=> 
+
+#'getxkcd.core/get-comic-response
+clj::getxkcd.core=> 
+; RuntimeException Invalid token: Error:  clojure.lang.Util.runtimeException (Util.java:221)
