@@ -25,13 +25,13 @@ type
 
 proc get_comic_response(number: int): WebResponse =
     let client = newHttpClient()
-    var url = ""
-    if (number == -1):
-        echo "Fetching latest comic"
-        url = "http://xkcd.com/info.0.json"
-    else:
-        echo &"Fetching comic # {number}"
-        url = &"http://xkcd.com/{number}/info.0.json"
+    let url = 
+        if (number == -1):
+            echo "Fetching latest comic"
+            "http://xkcd.com/info.0.json"
+        else:
+            echo &"Fetching comic # {number}"
+            &"http://xkcd.com/{number}/info.0.json"
     let r = client.get(url)
     if (r.status == "200 OK"):        
         let cr = to(parseJson(r.body), ComicResponse)
@@ -64,7 +64,7 @@ proc validate_output(output_format: string): bool =
         return false
     return true
 
-var p = newParser("Get XKCD"):
+let p = newParser("Get XKCD"):
     help("Fetch XKCD from the XKCD API")
     flag("-s", "--save")
     option("-o", "--output_format", default="text")
