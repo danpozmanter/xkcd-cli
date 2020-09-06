@@ -18,9 +18,11 @@ type
         day: string
 
 type
-    WebResponse = object
-        comic: ComicResponse
-        error: string
+    WebResponseResult = enum Ok, Error
+    WebResponse = ref object
+        case result: WebResponseResult
+        of Ok: comic: ComicResponse
+        of Error: error: string
         
 
 proc get_comic_response(number: int): WebResponse =
@@ -35,8 +37,8 @@ proc get_comic_response(number: int): WebResponse =
     let r = client.get(url)
     if (r.status == "200 OK"):        
         let cr = to(parseJson(r.body), ComicResponse)
-        return WebResponse(comic:cr)
-    return WebResponse(error:r.status)
+        return WebResponse(result: Ok, comic:cr)
+    return WebResponse(result:Error, error:r.status)
 
 proc print_comic_response(comic: ComicResponse, output_format: string): void =
     if output_format == "json":
@@ -78,7 +80,7 @@ if validate_output(opts.output_format) != true:
     quit(1)
 
 let response = get_comic_response(parseInt(opts.number))
-if response.error != "":
+if response.result == Error:
     echo "Error!"
     echo response.error
 else:
