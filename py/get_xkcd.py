@@ -1,9 +1,11 @@
 import argparse
+from dataclasses import dataclass
 import json
 import sys
 import requests
 
 
+@dataclass
 class ComicResponse:
     month: str
     num: int
@@ -17,13 +19,6 @@ class ComicResponse:
     title: str
     day: str
 
-    @classmethod
-    def from_dict(cls, data: dict):
-        instance = cls()
-        for key in data:
-            setattr(instance, key, data[key])
-        return instance
-    
     def to_json(self):
         return json.dumps(self.__dict__, indent=2)
 
@@ -43,8 +38,7 @@ class WebResponse:
             raise Exception('Must specify comic or error')
 
 
-def handle_error(error: str):
-    print('Error! {}'.format(error))
+def handle_error(error: str): print('Error! {}'.format(error))
 
 
 def get_comic_response(number: str) -> WebResponse:
@@ -58,7 +52,7 @@ def get_comic_response(number: str) -> WebResponse:
     r = requests.get(url)
     if r.ok:
         data = r.json()
-        return WebResponse(comic=ComicResponse.from_dict(data))
+        return WebResponse(comic=ComicResponse(**data))
     return WebResponse(error=r.text)
 
 
