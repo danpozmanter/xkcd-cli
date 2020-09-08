@@ -4,8 +4,7 @@ Inspired by this post (using Go): https://eryb.space/2020/05/27/diving-into-go-b
 
 I decided to compare how it felt to build a super simple console app using a few different approaches:
 
-* Python with a minimal approach
-* Python with a more functional approach and static typing
+* Python
 * F#
 * C#
 * Scala
