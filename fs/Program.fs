@@ -12,7 +12,7 @@ type Arguments = {
 
 [<CLIMutable>]
 type ComicResponse = {
-    Month:string
+    Month: string
     Num: int
     Link: string
     Year: string
@@ -25,9 +25,13 @@ type ComicResponse = {
     Day: string
 }
 
+type ErrorResponse = {
+    Message: string
+}
+
 type WebResponse =
 | Success of ComicResponse
-| Error of string
+| Error of ErrorResponse
 
 let HandleError (error:string) =
     printfn "Error! %A" error
@@ -49,8 +53,8 @@ let GetComicResponse (client:HttpClient, number:int) =
         let data = JsonSerializer.Deserialize<ComicResponse> (resp, opts)
         data |> WebResponse.Success
     with
-    | :? HttpRequestException as e -> WebResponse.Error <| e.Message
-    | :? System.AggregateException as e -> WebResponse.Error <| e.Message
+    | :? HttpRequestException as e -> WebResponse.Error <| {Message=e.Message}
+    | :? System.AggregateException as e -> WebResponse.Error <| {Message=e.Message}
 
 let PrintComicResponse comic outputFormat = 
     if outputFormat = "json" then
@@ -93,6 +97,6 @@ let main argv =
                 PrintComicResponse s args.Value.OutputFormat
                 if args.Value.Save then
                     SaveComic(client, s)
-            | WebResponse.Error e -> HandleError e       
+            | WebResponse.Error e -> HandleError e.Message     
         | _ -> ()
     0

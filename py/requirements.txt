@@ -1,1 +1,2 @@
 requests==2.23.0
+PySumTypes==0.0.1

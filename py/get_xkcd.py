@@ -2,6 +2,7 @@ import argparse
 from dataclasses import dataclass
 import json
 import sys
+from pysumtypes import sumtype
 import requests
 
 
@@ -23,22 +24,19 @@ class ComicResponse:
         return json.dumps(self.__dict__, indent=2)
 
 
+@dataclass
+class ErrorResponse:
+    message: str
+
+
+@sumtype
 class WebResponse:
-    comic: ComicResponse = None
-    error: str = None
-
-    def __init__(self, comic=None, error=None):
-        if comic:
-            self.comic = comic
-            self.error = None
-        elif error:
-            self.comic = None
-            self.error = error
-        else:
-            raise Exception('Must specify comic or error')
+    comic: ComicResponse
+    error: ErrorResponse
 
 
-def handle_error(error: str): print('Error! {}'.format(error))
+def handle_error(error: ErrorResponse):
+    print('Error! {}'.format(error.message))
 
 
 def get_comic_response(number: str) -> WebResponse:
@@ -52,8 +50,8 @@ def get_comic_response(number: str) -> WebResponse:
     r = requests.get(url)
     if r.ok:
         data = r.json()
-        return WebResponse(comic=ComicResponse(**data))
-    return WebResponse(error=r.text)
+        return WebResponse(ComicResponse(**data))
+    return WebResponse(ErrorResponse(r.text))
 
 
 def print_comic_response(comic: ComicResponse, output_format: str):
@@ -109,9 +107,10 @@ if __name__ == '__main__':
     if not validate_output(args.o):
         sys.exit(1)
     response = get_comic_response(args.n)
-    if response.comic:
-        print_comic_response(response.comic, args.o)
+    if response.match(ComicResponse):
+        comic = response.unwrap()
+        print_comic_response(comic, args.o)
         if args.s:
-            save_comic(response.comic)
+            save_comic(comic)
     else:
-        handle_error(response.error)
+        handle_error(response.unwrap())
