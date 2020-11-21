@@ -1,9 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Net.Http;
-using Newtonsoft.Json;
 using CommandLine;
-// System.Text.Json would be preferable but is not yet feature complete.
+using System.Text.Json;
 
 namespace cs
 {
@@ -18,17 +17,17 @@ namespace cs
     }
 
     class ComicResponse {
-        public string Month;
-        public int Num;
-        public string Link;
-        public string Year;
-        public string News;
-        public string Safe_Title;
-        public string Transcript;
-        public string Alt;
-        public string Img;
-        public string Title;
-        public string Day;
+        public string Month { get; set; }
+        public int Num { get; set; }
+        public string Link { get; set; }
+        public string Year { get; set; }
+        public string News { get; set; }
+        public string Safe_Title { get; set; }
+        public string Transcript { get; set; }
+        public string Alt { get; set; }
+        public string Img { get; set; }
+        public string Title { get; set; }
+        public string Day { get; set; }
     }
 
     class Program
@@ -45,7 +44,8 @@ namespace cs
             }
             try {
                 var resp = client.GetStringAsync(url).Result;
-                var data = JsonConvert.DeserializeObject<ComicResponse>(resp);
+                var opts = new JsonSerializerOptions{ PropertyNameCaseInsensitive = true};
+                var data = JsonSerializer.Deserialize<ComicResponse>(resp, opts);
                 return data;
             }
             catch(HttpRequestException e) {
@@ -59,7 +59,8 @@ namespace cs
 
         static void PrintComicResponse(ComicResponse comic, string outputFormat) {
             if (outputFormat == "json") {
-                Console.WriteLine(JsonConvert.SerializeObject(comic, Formatting.Indented));
+                var opts = new JsonSerializerOptions{ WriteIndented = true};
+                Console.WriteLine(JsonSerializer.Serialize(comic, opts));
             }
             else {
                 Console.WriteLine(comic.Title);
@@ -69,6 +70,7 @@ namespace cs
         }
 
         static void SaveComic(HttpClient client, ComicResponse comic) {
+            Console.WriteLine("Saving comic...");
             var imagesplitname = comic.Img.Split("/");
             var imagename = imagesplitname[imagesplitname.Length - 1];
             var filename = String.Format("xkcd_{0}", imagename);
