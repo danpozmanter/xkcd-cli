@@ -10,17 +10,17 @@ import com.github.kittinunf.fuel.gson.responseObject
 import com.google.gson.*
 
 data class ComicResponse(
-        val month: String,
-        val num: Int,
-        val link: String,
-        val year: String,
-        val news: String,
-        val safeTitle: String,
-        val transcript: String,
-        val alt: String,
-        val img: String,
-        val title: String,
-        val day: String
+    val month: String,
+    val num: Int,
+    val link: String,
+    val year: String,
+    val news: String,
+    val safeTitle: String,
+    val transcript: String,
+    val alt: String,
+    val img: String,
+    val title: String,
+    val day: String
 )
 
 fun getComicResponse(number: Int): ComicResponse? {

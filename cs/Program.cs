@@ -37,7 +37,7 @@ namespace cs
             var url = "";
             if (number == -1) {
                 Console.WriteLine("Fetching latest comic");
-                url = string.Format("http://xkcd.com/info.0.json", number);
+                url = string.Format("http://xkcd.com/info.0.json");
             } else {
                 Console.WriteLine(String.Format("Fetching comic #{0}", number));
                 url = string.Format("http://xkcd.com/{0}/info.0.json", number);
